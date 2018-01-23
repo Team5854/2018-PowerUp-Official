@@ -11,18 +11,21 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.driveSystem.DriveSystem;
 import com.team5854.utils.driveSystem.DriveSystem.DriveType;
 
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
+import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends IterativeRobot {
-	TalonSRX frontLeft = new TalonSRX(1);
-	TalonSRX frontRight = new TalonSRX(3);
-	TalonSRX backLeft = new TalonSRX(7);
-	TalonSRX backRight = new TalonSRX(5);
-	TalonSRX frontLeftTwo = new TalonSRX(2);
-	TalonSRX frontRightTwo = new TalonSRX(4);
-	TalonSRX backLeftTwo = new TalonSRX(8);
-	TalonSRX backRightTwo = new TalonSRX(6);
+	TalonSRX frontLeft = new TalonSRX(3);
+	TalonSRX frontRight = new TalonSRX(1);
+	TalonSRX backLeft = new TalonSRX(5);
+	TalonSRX backRight = new TalonSRX(7);
+	TalonSRX frontLeftTwo = new TalonSRX(4);
+	TalonSRX frontRightTwo = new TalonSRX(2);
+	TalonSRX backLeftTwo = new TalonSRX(6);
+	TalonSRX backRightTwo = new TalonSRX(8);
 	
 	DriveSystem driveSystem;
 	Joystick joystick;
@@ -46,7 +49,9 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopPeriodic() {
-		driveSystem.drive(joystick.getRawAxis(1), joystick.getRawAxis(3));
+		double left = joystick.getRawAxis(1) / 2;
+		double right = joystick.getRawAxis(3) / 2;
+		driveSystem.drive(left, right);
 	}
 
 	@Override
