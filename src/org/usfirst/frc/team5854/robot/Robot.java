@@ -11,18 +11,15 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.driveSystem.DriveSystem;
 import com.team5854.utils.driveSystem.DriveSystem.DriveType;
 
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SpeedControllerGroup;
-import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends IterativeRobot {
-	TalonSRX frontLeft = new TalonSRX(3);
+	TalonSRX frontLeft = new TalonSRX(4);
 	TalonSRX frontRight = new TalonSRX(1);
 	TalonSRX backLeft = new TalonSRX(5);
 	TalonSRX backRight = new TalonSRX(7);
-	TalonSRX frontLeftTwo = new TalonSRX(4);
+	TalonSRX frontLeftTwo = new TalonSRX(3);
 	TalonSRX frontRightTwo = new TalonSRX(2);
 	TalonSRX backLeftTwo = new TalonSRX(6);
 	TalonSRX backRightTwo = new TalonSRX(8);
@@ -54,8 +51,21 @@ public class Robot extends IterativeRobot {
 		driveSystem.drive(left, right);
 	}
 
+	
+	boolean isLoop = true;
+	
+	public void testInit() {
+		isLoop = true;
+	}
+	
 	@Override
 	public void testPeriodic() {
-		
+		if (isLoop) {
+			driveSystem.setEncoderPosition(0);
+			System.out.println("Drive forward");
+			driveSystem.drive(2);
+			
+			isLoop = false;
+		} 
 	}
 }

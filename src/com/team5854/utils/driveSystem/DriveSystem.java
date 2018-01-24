@@ -9,7 +9,16 @@ public class DriveSystem {
 	private TalonSRX backLeftMotor;
 	private TalonSRX backRightMotor;
 	private int driveType = 0;
+	private double wheelRadius = 1;
 	
+	
+//--------------------CONSTRUCTORS----------------------
+	/**
+	 * Two Motor Drive Train
+	 * @param type
+	 * @param left
+	 * @param right
+	 */
 	public DriveSystem(int type, TalonSRX left, TalonSRX right) {
 		this.driveType = type;
 		//-----SET THE MASTER MOTORS----
@@ -17,7 +26,14 @@ public class DriveSystem {
 		this.rightMotor = right;
 		setupAutonomous();
 	}
-	
+	/**
+	 * Four Motor Drive Train
+	 * @param type
+	 * @param frontLeft
+	 * @param frontRight
+	 * @param backLeft
+	 * @param backRight
+	 */
 	public DriveSystem(int type, TalonSRX frontLeft, TalonSRX frontRight, TalonSRX backLeft, TalonSRX backRight) {
 		this.driveType = type;
 		//-----SET THE MASTER MOTORS----
@@ -36,6 +52,18 @@ public class DriveSystem {
 		setupAutonomous();
 	}
 	
+	/**
+	 * Eight Motor Drive Train
+	 * @param type
+	 * @param frontLeft
+	 * @param frontRight
+	 * @param backLeft
+	 * @param backRight
+	 * @param frontLeftTwo
+	 * @param frontRightTwo
+	 * @param backLeftTwo
+	 * @param backRightTwo
+	 */
 	public DriveSystem(int type, TalonSRX frontLeft, TalonSRX frontRight, TalonSRX backLeft, TalonSRX backRight,
 					   TalonSRX frontLeftTwo, TalonSRX frontRightTwo, TalonSRX backLeftTwo, TalonSRX backRightTwo) {
 		this.driveType = type;
@@ -70,8 +98,12 @@ public class DriveSystem {
 		}
 		setupAutonomous();
 	}
-	
-	
+//------------DRIVE METHODS------------------------
+	/**
+	 * Normal two stick drive train. Examples: Tank, and Arcade.
+	 * @param x
+	 * @param y
+	 */
 	public void drive(double x, double y) {
 		if (this.driveType == DriveType.TankDrive) {
 			leftMotor.set(ControlMode.PercentOutput, x);
@@ -83,22 +115,45 @@ public class DriveSystem {
 			System.err.println("DRIVESYTEM: Drive Type Incorrent For A \"x y\" Drive Type.");
 		}
 	}
-	public void drive(double x, double y, double t, double r, double gyro) {
+	/**
+	 * drive types that require 3 input values and a gyro.
+	 * We will assume mecanum for examples
+	 * @param x - the x input (Forward/backwards).
+	 * @param y - the Y input (Left/Right).
+	 * @param t - the twist value ()
+	 * @param gyro
+	 */
+	public void drive(double x, double y, double t, double gyro) {
 		if (this.driveType == DriveType.MecanumDrive) {
 			
 		} else {
 			System.err.println("DRIVESYTEM: Drive Type Incorrent For A \"x y tist rotate\" Drive Type.");
 		}
 	}
+	/**
+	 * If the wheel diameter OR radius has been set than positions is in the units of said diameter/radius.
+	 * If diameter/radius not set then position is number of full wheel rotations. 
+	 * @param position
+	 */
 	public void drive(double position) {
-		leftMotor.set(ControlMode.Position, position);
-		rightMotor.set(ControlMode.Position, position);
-		if (backLeftMotor != null && backRightMotor != null) {
-			backLeftMotor.set(ControlMode.Position, position);
-			backRightMotor.set(ControlMode.Position, position);
-		}
+		double rotations = 4096 * position;
+		double distance = getWheelCircumference() * rotations;
+		leftMotor.set(ControlMode.Position, distance);
+		rightMotor.set(ControlMode.Position, distance);
+		System.out.println(leftMotor.getSelectedSensorPosition(0) + " " + distance);
+		System.out.println(rightMotor.getSelectedSensorPosition(0) + " " + distance);
+	}
+//-----------------UTIL FUNCTIONS-----------------------
+	/**
+	 * Set the encoder position to the value passed to this method. 
+	 * @param value - The value to set the encoders to (Usually 0 to reset).
+	 */
+	public void setEncoderPosition(int value) {
+		leftMotor.setSelectedSensorPosition(value, 0, 10);
+		rightMotor.setSelectedSensorPosition(value, 0, 10);
 	}
 	
+//-----------PRIVATE HELPER METHODS-------------------
 	private void setupAutonomous() {
 		int absolutePosition = this.leftMotor.getSelectedSensorPosition(10) & 0xFFF;
  		this.leftMotor.setSelectedSensorPosition(absolutePosition, 0, 10);
@@ -168,6 +223,25 @@ public class DriveSystem {
  		}
 	}
 
+	
+//-------------------GETTERS AND SETTERS-------------------
+	public double getWheelDiameter() {
+		return 2 * wheelRadius;
+	}
+	public void setWheelDiameter(double wheelDiameter) {
+		this.wheelRadius = wheelDiameter/2;
+	}
+	public double getWheelRadius() {
+		return wheelRadius;
+	}
+	public void setWheelRadius(double wheelRadius) {
+		this.wheelRadius = wheelRadius;
+	}	
+	public double getWheelCircumference() {
+		double wheelCircumference = 2 * Math.PI * wheelRadius;
+		return wheelCircumference ;
+	}
+//-------------DRIVE TYPE SUBCLASS---------------
 	public class DriveType {
 		public static final int TankDrive = 2343;
 		public static final int ArcadeDrive = 2443;
