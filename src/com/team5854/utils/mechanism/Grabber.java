@@ -1,3 +1,9 @@
+/**
+ * 
+ * @author Veronica Winebarger (ebolakitten) 02/03/18
+ * This is the base grabber code for the robots intake/output system.
+ *
+ */
 package com.team5854.utils.mechanism;
 
 import edu.wpi.first.wpilibj.VictorSP;
