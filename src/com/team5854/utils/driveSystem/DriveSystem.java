@@ -4,7 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.Maths;
-import com.team5854.utils.mechanisms.Ultrasonic;
+import com.team5854.utils.sensors.Ultrasonic;
 public class DriveSystem {
 	private TalonSRX leftMotor;
 	private TalonSRX rightMotor;

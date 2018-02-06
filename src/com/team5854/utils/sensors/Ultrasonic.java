@@ -1,4 +1,4 @@
-package com.team5854.utils.mechanisms;
+package com.team5854.utils.sensors;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 

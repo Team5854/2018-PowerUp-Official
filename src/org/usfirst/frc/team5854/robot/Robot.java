@@ -3,7 +3,7 @@ package org.usfirst.frc.team5854.robot;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.driveSystem.DriveSystem;
 import com.team5854.utils.driveSystem.DriveSystem.DriveType;
-import com.team5854.utils.mechanisms.Ultrasonic;
+import com.team5854.utils.sensors.Ultrasonic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
