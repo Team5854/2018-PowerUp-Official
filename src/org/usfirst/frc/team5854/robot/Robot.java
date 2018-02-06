@@ -3,6 +3,7 @@ package org.usfirst.frc.team5854.robot;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.driveSystem.DriveSystem;
 import com.team5854.utils.driveSystem.DriveSystem.DriveType;
+import com.team5854.utils.mechanisms.Ultrasonic;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
@@ -19,6 +20,8 @@ public class Robot extends IterativeRobot {
 	
 	DriveSystem driveSystem;
 	Joystick joystick;
+	
+	Ultrasonic sonic = new Ultrasonic(0);
 	@Override
 	public void robotInit() {
 		driveSystem = new DriveSystem(DriveType.TankDrive, frontLeft, frontRight, backLeft, backRight,
@@ -53,12 +56,7 @@ public class Robot extends IterativeRobot {
 	
 	@Override
 	public void testPeriodic() {
-		if (isLoop) {
-			driveSystem.setEncoderPosition(0);
-			System.out.println("Drive forward");
-			driveSystem.drive(2);
-			
-			isLoop = false;
-		} 
+		System.out.println(sonic.getDistance());
+		driveSystem.drive(sonic, 15);
 	}
 }

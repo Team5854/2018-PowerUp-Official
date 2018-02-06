@@ -3,6 +3,8 @@ package com.team5854.utils.driveSystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team5854.utils.Maths;
+import com.team5854.utils.mechanisms.Ultrasonic;
 public class DriveSystem {
 	private TalonSRX leftMotor;
 	private TalonSRX rightMotor;
@@ -143,6 +145,20 @@ public class DriveSystem {
 		System.out.println(leftMotor.getSelectedSensorPosition(0) + " " + distance);
 		System.out.println(rightMotor.getSelectedSensorPosition(0) + " " + distance);
 	}
+	/**
+	 * Drive to a distance away from the object in front of you using an Ultrasonic sensor
+	 * @param sonic - Ultrasonic sensor that you are using to drive
+	 * @param distance - distance away from the object in front of the Ultrasonic sensor.
+	 */
+	public void drive(Ultrasonic sonic, double distance) {
+		if (sonic.getDistance() > distance) {
+			double speed = Maths.map(sonic.getDistance()-distance, 0, 50, 0.1, 0.4);
+			this.drive(-speed, -speed);
+		} else {
+			this.drive(0, 0);
+		}
+	}
+	
 //-----------------UTIL FUNCTIONS-----------------------
 	/**
 	 * Set the encoder position to the value passed to this method. 
