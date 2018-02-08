@@ -3,6 +3,7 @@ package com.team5854.utils.driveSystem;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team5854.utils.Maths;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
@@ -15,11 +16,14 @@ public DriveSystem(TalonSRX frontLeft, TalonSRX frontRight, TalonSRX backLeft, T
 	this.backRight = backRight;
 	this.backLeft.set(ControlMode.Follower, this.frontLeft.getDeviceID());
 	this.backRight.set(ControlMode.Follower, this.frontRight.getDeviceID());
+	setupAutonomous();
 }
 public void drive(double x, double y) {
 	frontLeft.set(ControlMode.PercentOutput, x);
 	frontRight.set(ControlMode.PercentOutput, y);
 }
+
+
 public void drive(ADXRS450_Gyro gyro, double degreeToTurn) {
 	if (gyro.getAngle()-degreeToTurn > 0) {
 		double speed = Maths.map(gyro.getAngle()-degreeToTurn, 0, 270, 0.1,0.4);
@@ -29,8 +33,18 @@ public void drive(ADXRS450_Gyro gyro, double degreeToTurn) {
 			this.drive(speed, -speed);
 		}
 	}
-	
 }
+public void drive(double position) {
+	setEncoder(0);
+	this.frontLeft.set(ControlMode.Position, position);
+	this.frontRight.set(ControlMode.Position, position);
+}
+
+
+ public void setEncoder (int position) {
+	 this.frontLeft.setSelectedSensorPosition(position, 0, 10);
+	 this.frontRight.setSelectedSensorPosition(position, 0, 10);
+ }
 private void setupAutonomous() {
 	int absolutePosition = this.frontLeft.getSelectedSensorPosition(10)& 0xFFF;
 	this.frontLeft.setSelectedSensorPosition(absolutePosition, 0, 10);
