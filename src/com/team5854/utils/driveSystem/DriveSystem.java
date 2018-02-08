@@ -5,6 +5,8 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.Maths;
 import com.team5854.utils.sensors.Ultrasonic;
+
+import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 public class DriveSystem {
 	private TalonSRX leftMotor;
 	private TalonSRX rightMotor;
@@ -12,6 +14,7 @@ public class DriveSystem {
 	private TalonSRX backRightMotor;
 	private int driveType = 0;
 	private double wheelRadius = 1;
+	private int speedMultiplier = 1;
 	
 	
 //--------------------CONSTRUCTORS----------------------
@@ -108,11 +111,11 @@ public class DriveSystem {
 	 */
 	public void drive(double x, double y) {
 		if (this.driveType == DriveType.TankDrive) {
-			leftMotor.set(ControlMode.PercentOutput, x);
-			rightMotor.set(ControlMode.PercentOutput, y);
+			leftMotor.set(ControlMode.PercentOutput, x * this.speedMultiplier);
+			rightMotor.set(ControlMode.PercentOutput, y * this.speedMultiplier);
 		} else if (this.driveType == DriveType.ArcadeDrive){
-			leftMotor.set(ControlMode.PercentOutput, x+y);
-			rightMotor.set(ControlMode.PercentOutput, x-y);
+			leftMotor.set(ControlMode.PercentOutput, (x+y) * this.speedMultiplier);
+			rightMotor.set(ControlMode.PercentOutput, (x-y) * this.speedMultiplier);
 		} else {
 			System.err.println("DRIVESYTEM: Drive Type Incorrent For A \"x y\" Drive Type.");
 		}
@@ -153,9 +156,20 @@ public class DriveSystem {
 	public void drive(Ultrasonic sonic, double distance) {
 		if (sonic.getDistance() > distance) {
 			double speed = Maths.map(sonic.getDistance()-distance, 0, 50, 0.1, 0.4);
-			this.drive(-speed, -speed);
+			this.drive(speed * this.speedMultiplier, speed * this.speedMultiplier);
 		} else {
 			this.drive(0, 0);
+		}
+	}
+	
+	public void drive(ADXRS450_Gyro gyro, double degreeToTurn) {
+		if (gyro.getAngle()-degreeToTurn > 0) {
+			double speed = Maths.map(gyro.getAngle()-degreeToTurn, 0, 270, 0.1, 0.4);
+			if (degreeToTurn < 0) {
+				this.drive(-speed * this.speedMultiplier, speed * this.speedMultiplier);
+			} else {
+				this.drive(speed * this.speedMultiplier, -speed * this.speedMultiplier);
+			}
 		}
 	}
 	
@@ -256,6 +270,9 @@ public class DriveSystem {
 	public double getWheelCircumference() {
 		double wheelCircumference = 2 * Math.PI * wheelRadius;
 		return wheelCircumference ;
+	}
+	public void reverseDirection() {
+		this.speedMultiplier *= -1;
 	}
 //-------------DRIVE TYPE SUBCLASS---------------
 	public class DriveType {

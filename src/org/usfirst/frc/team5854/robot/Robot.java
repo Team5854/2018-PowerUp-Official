@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5854.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team5854.utils.CameraSystem;
 import com.team5854.utils.driveSystem.DriveSystem;
 import com.team5854.utils.driveSystem.DriveSystem.DriveType;
 import com.team5854.utils.sensors.Ultrasonic;
@@ -17,7 +18,7 @@ public class Robot extends IterativeRobot {
 	TalonSRX frontRightTwo = new TalonSRX(2);
 	TalonSRX backLeftTwo = new TalonSRX(6);
 	TalonSRX backRightTwo = new TalonSRX(8);
-	
+	Thread cameras;
 	DriveSystem driveSystem;
 	Joystick joystick;
 	
@@ -26,8 +27,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		driveSystem = new DriveSystem(DriveType.TankDrive, frontLeft, frontRight, backLeft, backRight,
 				frontLeftTwo, frontRightTwo, backLeftTwo, backRightTwo);
-		
 		joystick = new Joystick(0);
+		cameras = new Thread(new CameraSystem());
+		cameras.start();
 	}
 
 	@Override
