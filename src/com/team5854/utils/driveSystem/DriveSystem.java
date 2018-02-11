@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.team5854.utils.Maths;
+import com.team5854.utils.sensors.Ultrasonic;
 
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 
@@ -40,6 +41,12 @@ public void drive(double position) {
 	this.frontRight.set(ControlMode.Position, position);
 }
 
+public void drive(Ultrasonic ultraSensor, double distanceFromWall) {
+	if (ultraSensor.getDistance()>distanceFromWall) {
+		double speed = Maths.map(ultraSensor.getDistance(), distanceFromWall, 100, 0.1, 0.7);
+		this.drive(speed,speed);
+	}
+}
 
  public void setEncoder (int position) {
 	 this.frontLeft.setSelectedSensorPosition(position, 0, 10);
