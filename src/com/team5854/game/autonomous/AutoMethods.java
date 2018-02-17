@@ -8,12 +8,19 @@ import edu.wpi.first.wpilibj.ADXRS450_Gyro;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoMethods {
-	private static String gameData = "";
-	private static ADXRS450_Gyro gyro; 
-	private static DriveSystem driveSystem;
-	private static Grabber grabber;
-	private static Ultrasonic ultraSensor;
-	public static void cLeftSwitch() {
+	private String gameData = "";
+	private ADXRS450_Gyro gyro; 
+	private DriveSystem driveSystem;
+	private Grabber grabber;
+	private Ultrasonic ultraSensor;
+	public AutoMethods(ADXRS450_Gyro gyro, DriveSystem driveSystem, Grabber grabber, Ultrasonic ultraSensor) {
+		this.gyro = gyro;
+		this.driveSystem = driveSystem;
+		this.grabber = grabber;
+		this.ultraSensor = ultraSensor;
+	}
+	
+	public void cLeftSwitch() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('R'==gameData.charAt(0)) {
 			driveSystem.drive(gyro, 52);
@@ -25,7 +32,7 @@ public class AutoMethods {
 		}
 			
 	}
-	public static void cRightSwitch() {
+	public void cRightSwitch() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('L'==gameData.charAt(0)) {
 			driveSystem.drive(gyro, -52);
@@ -38,7 +45,7 @@ public class AutoMethods {
 			
 	}
 
-	public static void leftSwitch() {
+	public void leftSwitch() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('L'==gameData.charAt(0)) {
 			driveSystem.drive(168);
@@ -57,7 +64,7 @@ public class AutoMethods {
 		}
 	}
 	
-	public static void leftScale() {
+	public void leftScale() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('L'==gameData.charAt(0)) {
 			driveSystem.drive(317.65);
@@ -77,7 +84,7 @@ public class AutoMethods {
 	
 	}
 	
-	public static void rightScale() {
+	public void rightScale() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('R'==gameData.charAt(0)) {
 			driveSystem.drive(317.65);

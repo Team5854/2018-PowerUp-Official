@@ -29,4 +29,9 @@ public class Grabber {
 		this.left.set(1);
 		this.right.set(-1);
 	}
+	
+	public void stop() {
+		this.left.set(0);
+		this.right.set(0);
+	}
 }

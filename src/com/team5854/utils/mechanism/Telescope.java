@@ -15,19 +15,28 @@ public class Telescope {
 		this.bottomLimit = bottomLimit;
 	}
 	public void lowerLimit() {
-		if(!lowerLimit.get()) {
-			this.telescopeMotor.set(ControlMode.PercentOutput, .2);
+		if(lowerLimit.get()) {
+			this.telescopeMotor.set(ControlMode.PercentOutput, -1);
+		}else {
+			this.telescopeMotor.set(ControlMode.PercentOutput, 0);
 		}
 	}
 	public void upperLimit() {
-		if(!upperLimit.get()) {
-			this.telescopeMotor.set(ControlMode.PercentOutput, .2);
+		if(upperLimit.get()) {
+			this.telescopeMotor.set(ControlMode.PercentOutput, 1);
+		} else {
+			this.telescopeMotor.set(ControlMode.PercentOutput, 0);
 		}
 	}
 	public void down() {
-		if(!bottomLimit.get()) {
+		if(bottomLimit.get()) {
 			this.telescopeMotor.set(ControlMode.PercentOutput, -.2);
+		}else {
+			this.telescopeMotor.set(ControlMode.PercentOutput, 0);
 		}
+	}
+	public void stop() {
+		this.telescopeMotor.set(ControlMode.PercentOutput, 0);
 	}
 	
 }
