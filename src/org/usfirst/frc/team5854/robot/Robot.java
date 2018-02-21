@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	//--------------------SENSOR INITIALIZATION----------------
@@ -59,11 +60,11 @@ public class Robot extends IterativeRobot {
 		grabber = new Grabber(leftGrabber, rightGrabber);
 		
 		//-----------------DRIVE SYSTEM CONSTRUCTION--------
-		frontLeft = new TalonSRX(2);
-		backLeft = new TalonSRX(1);
-		frontRight = new TalonSRX(7);
-		backRight = new TalonSRX(8);
-		driveSystem = new DriveSystem(frontLeft, frontRight, backLeft, backLeft);
+		frontLeft = new TalonSRX(7);
+		backLeft = new TalonSRX(8);
+		frontRight = new TalonSRX(2);
+		backRight = new TalonSRX(1);
+		driveSystem = new DriveSystem(frontLeft, frontRight, backLeft, backRight);
 		driveStraightToggle = new Toggle(mainJoystick);
 		driveSystem.setPID(0, 0, 0);
 	}
@@ -79,6 +80,7 @@ public class Robot extends IterativeRobot {
 	}
 	@Override
 	public void teleopInit() {
+		driveSystem.setEncoder(0);
 		
 	}
 	boolean driveStraightGyroReset = true;
@@ -87,8 +89,8 @@ public class Robot extends IterativeRobot {
 		//--------------DRIVE CODE----------------
 		driveStraightToggle.toggle(2); //toggle if button 2 is pressed
 		
-		double xStick = mainJoystick.getRawAxis(3);//value for left stick
-		double yStick =  mainJoystick.getRawAxis(1); //value for right stick
+		double xStick = mainJoystick.getRawAxis(1);//value for left stick
+		double yStick =  mainJoystick.getRawAxis(3); //value for right stick
 		double xSpeed = xStick / 2;
 		double ySpeed = yStick / 2;
 		if (driveStraightToggle.getState()) {//if Drive Straight Toggle
@@ -122,14 +124,32 @@ public class Robot extends IterativeRobot {
 		} else {
 			grabber.stop();
 		}
+		System.out.println("ENCODER POSITIO: " + driveSystem.getLeftEncoderPosition() + " " + driveSystem.getRightEncoderPosition());
 	}
-
+	boolean once = false;
 	public void testInit() {
-		
+		double P = (0.6 * 1023) / 4096;
+		double I = P/50000;
+		double D = P * 1000;
+		driveSystem.setPID(P, I, D);
+		driveSystem.setupAutonomous();
+		driveSystem.setEncoder(0);
+		once = true;
 	}
-	
 	@Override
 	public void testPeriodic() {
-		
+		if (once) {
+			System.out.println("Running");
+			double encoderTarget = driveSystem.drive(3);
+			System.out.println(encoderTarget);
+//			while (driveSystem.getAvgEncoderPosition() < encoderTarget-5 || driveSystem.getAvgEncoderPosition() > encoderTarget+5) {
+//				
+//			}
+//			System.out.println("FINISHED");
+			once = false;
+		}
+		System.out.println("Encoder Position: " + driveSystem.getLeftEncoderPosition() + " " + driveSystem.getRightEncoderPosition());
+		SmartDashboard.putNumber("Position Left", driveSystem.getLeftEncoderPosition());
+		SmartDashboard.putNumber("Position Right", driveSystem.getRightEncoderPosition());
 	}
 }
