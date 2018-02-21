@@ -1,6 +1,7 @@
 package org.usfirst.frc.team5854.robot;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.team5854.game.autonomous.AutoMethods;
 import com.team5854.utils.Maths;
 import com.team5854.utils.Toggle;
 import com.team5854.utils.driveSystem.DriveSystem;
@@ -13,6 +14,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.VictorSP;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
@@ -36,6 +38,21 @@ public class Robot extends IterativeRobot {
 	TalonSRX frontLeft, frontRight, backLeft, backRight; //drive motors 
 	DriveSystem driveSystem;//drive system
 	Toggle driveStraightToggle;
+	
+	
+	//--------------CONSTRUCT SMARTDASHBOARD----------
+	SendableChooser<String> autoPlacement;
+	final String autoLeft = "LEFT";
+	final String autoRight = "RIGHT";
+	final String autoCenterLeft = "CLEFT";
+	final String autoCenterRight = "CRIGHT";
+	SendableChooser<String> autoObjective;
+	final String autoSwitch = "SWITCH";
+	final String autoScale = "SCALE";
+	
+	//-------------SETUP AUTONOMOUS OBJECT----------
+	AutoMethods autonomous;
+	
 	
 	@Override
 	public void robotInit() {
@@ -67,6 +84,21 @@ public class Robot extends IterativeRobot {
 		driveSystem = new DriveSystem(frontLeft, frontRight, backLeft, backRight);
 		driveStraightToggle = new Toggle(mainJoystick);
 		driveSystem.setPID(0, 0, 0);
+		
+		//-----------SMARTDASHBOARD CONSTRUCTION-------
+		autoPlacement = new SendableChooser<String>();
+		autoPlacement.addDefault(autoLeft, autoLeft);
+		autoPlacement.addObject(autoRight, autoRight);
+		autoPlacement.addObject(autoCenterLeft, autoCenterLeft);
+		autoPlacement.addObject(autoCenterRight, autoCenterRight);
+		SmartDashboard.putData(autoPlacement);
+		autoObjective = new SendableChooser<String>();
+		autoObjective.addDefault(autoSwitch, autoSwitch);
+		autoObjective.addObject(autoScale, autoScale);
+		SmartDashboard.putData(autoObjective);
+		
+		//----------CONSTRUCT AUTONOMOUS OBJECT----------
+		autonomous = new AutoMethods(gyro, driveSystem, grabber, sonic);
 	}
 
 	@Override
@@ -76,7 +108,38 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void autonomousPeriodic() {
-		
+		String placement = autoPlacement.getSelected();
+		String objective = autoObjective.getSelected();
+		switch (placement) {
+		case autoLeft:
+			if (objective.equals(autoSwitch)) {
+				autonomous.leftSwitch();
+			} else {
+				autonomous.leftScale();
+			}
+			break;
+		case autoRight:
+			if (objective.equals(autoSwitch)) {
+				autonomous.rightSwitch();
+			} else {
+				autonomous.rightScale();
+			}
+			break;
+		case autoCenterLeft:
+			if (objective.equals(autoSwitch)) {
+				autonomous.cLeftSwitch();
+			} else {
+				autonomous.cLeftScale();
+			}
+			break;
+		case autoCenterRight:
+			if (objective.equals(autoSwitch)) {
+				autonomous.cRightSwitch();
+			} else {
+				autonomous.cRightScale();
+			}
+			break;
+		}
 	}
 	@Override
 	public void teleopInit() {

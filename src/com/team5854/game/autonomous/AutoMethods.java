@@ -32,6 +32,10 @@ public class AutoMethods {
 		}
 			
 	}
+	public void cLeftScale() {
+		// TODO Auto-generated method stub
+		
+	}
 	public void cRightSwitch() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		if('L'==gameData.charAt(0)) {
@@ -43,6 +47,10 @@ public class AutoMethods {
 			driveSystem.drive(ultraSensor, 12);
 		}
 			
+	}
+	public void cRightScale() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	public void leftSwitch() {
@@ -82,6 +90,10 @@ public class AutoMethods {
 			grabber.output();
 		}
 	
+	}
+	public void rightSwitch() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public void rightScale() {
