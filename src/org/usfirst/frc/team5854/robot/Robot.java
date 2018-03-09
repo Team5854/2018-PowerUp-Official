@@ -91,11 +91,11 @@ public class Robot extends IterativeRobot {
 		autoPlacement.addObject(autoRight, autoRight);
 		autoPlacement.addObject(autoCenterLeft, autoCenterLeft);
 		autoPlacement.addObject(autoCenterRight, autoCenterRight);
-		SmartDashboard.putData(autoPlacement);
+		SmartDashboard.putData("Robot Placement:", autoPlacement);
 		autoObjective = new SendableChooser<String>();
 		autoObjective.addDefault(autoSwitch, autoSwitch);
 		autoObjective.addObject(autoScale, autoScale);
-		SmartDashboard.putData(autoObjective);
+		SmartDashboard.putData("Robot Objective:", autoObjective);
 		
 		//----------CONSTRUCT AUTONOMOUS OBJECT----------
 		autonomous = new AutoMethods(gyro, driveSystem, grabber, sonic);
